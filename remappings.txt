@@ -1,0 +1,3 @@
+ds-test/=lib/forge-std/lib/ds-test/src/
+flare-foundry-periphery-package/=lib/flare-foundry-periphery-package/src/
+forge-std/=lib/forge-std/src/
