@@ -7,9 +7,8 @@ import {IFtsoRegistry} from "flare-foundry-periphery-package/flare/ftso/userInte
 error FundMe__NotOwner();
 
 contract FundMe {
-
     // mappings
-    mapping (address => uint256) private fundedAmount;
+    mapping(address => uint256) private fundedAmount;
 
     uint256 public constant MIN_FUND = 5e18;
     address private immutable i_owner;
@@ -21,10 +20,9 @@ contract FundMe {
     }
 
     function getTokenPriceWei(
-        string memory _symbol, uint256 Amount
-    )
-        public view returns (uint256)
-    {
+        string memory _symbol,
+        uint256 Amount
+    ) public view returns (uint256) {
         // 2. Access the Contract Registry
         IFlareContractRegistry contractRegistry = IFlareContractRegistry(
             FLARE_CONTRACT_REGISTRY
@@ -38,8 +36,12 @@ contract FundMe {
         // 4. Get latest price
         (uint256 _price, uint256 _timestamp, uint256 _decimals) = ftsoRegistry
             .getCurrentPriceWithDecimals(_symbol);
-        
-        return uint256(((_price * (10 ** (18 - _decimals))) * Amount)/1e18);
+
+        // if (_timestamp < block.timestamp - 60 * 3 /* 3 mins */) {
+        //     revert("stale price feed");
+        // }
+
+        return uint256(((_price * (10 ** (18 - _decimals))) * Amount) / 1e18);
     }
 
     function fund() public payable {
@@ -52,7 +54,9 @@ contract FundMe {
     function withdraw() public onlyOwner {
         require(address(this).balance > 0);
 
-        (bool success,) = payable(msg.sender).call{value: address(this).balance}("");
+        (bool success, ) = payable(msg.sender).call{
+            value: address(this).balance
+        }("");
         require(success, "Call failed");
     }
 
@@ -67,7 +71,7 @@ contract FundMe {
         return fundedAmount[funder];
     }
 
-    function getOwner() external view returns(address) {
+    function getOwner() external view returns (address) {
         return i_owner;
     }
 }

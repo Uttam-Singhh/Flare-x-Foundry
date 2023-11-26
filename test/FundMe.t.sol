@@ -8,17 +8,40 @@ import {MockFtsoRegistry} from "./mocks/MockFtsoRegistry.sol";
 contract CounterTest is Test {
     FundMe public fundMe;
     address user = makeAddr("user");
-    uint256 constant TEST_VALUE = 0.1 ether;
+    uint256 constant TEST_VALUE = 6e18;
     uint256 constant STARTING_BALANCE = 10 ether;
+    uint8 public constant DECIMALS = 5;
+    int256 public constant INITIAL_ANSWER = 1 * 10**18;
+    string symbol = "testUSDC";
+    uint256 public constant TIMESTAMP = 0;
+
 
     function setUp() public {
-        FundMeContractDeploy fundMeContractDeploy = new FundMeContractDeploy();
-        fundMe = FundMeContractDeploy.run();
+        
+        fundMe = new FundMe;
         vm.deal(user, STARTING_BALANCE);
         mockRegistry = MockFtsoRegistry();
+        
     }
 
-    function testvalueis1dollar() public { 
+     //////////////////////////
+    ////// Price Tests //////
+    ////////////////////////
+
+    function testMockPrice() public {
+        (uint256 price, uint256 timestamp, uint256 decimals) = mockRegistry.getCurrentPriceWithDecimals(symbol);
+        assertEq(price, INITIAL_ANSWER);
+        assertEq(decimals, DECIMALS);
+        assertEq(timestamp, TIMESTAMP);
+    }
+
+
+ //////////////////////////
+    ////// FundMe Tests //////
+    ////////////////////////
+
+
+    function testvalue() public { 
         assertEq(fundMe.MIN_FUND(), 5e18);
     }
 
@@ -31,4 +54,15 @@ contract CounterTest is Test {
         vm.prank(user);
         fundMe.withdraw();
     }
+
+    function testFundUpdates() external {
+        vm.prank(user);
+        fundMe.fund{value: TEST_VALUE}();
+
+        uint256 fundedAmount = fundMe.getFundedAmount(USER);
+        console.log(fundedAmount);
+        assertEq(fundedAmount, TEST_VALUE);
+    }
+
+    // you can add more tests. for example testFundFails with less then min amount, etc.
 }
