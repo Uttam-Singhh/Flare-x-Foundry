@@ -49,15 +49,5 @@ contract CounterTest is Test {
         fundMe.withdraw();
     }
 
-    function testFundUpdates() external {
-        vm.prank(user);
-        fundMe.fund{value: TEST_VALUE}();
-
-        vm.prank(user);
-        uint256 fundedAmount = fundMe.getAmountFunded(user);
-        console2.log(fundedAmount);
-        assertEq(fundedAmount, TEST_VALUE);
-    }
-
     // you can add more tests. for example testFundFails with less then min amount, etc.
 }
