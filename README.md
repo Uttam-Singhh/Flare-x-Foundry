@@ -1,6 +1,6 @@
 ## Flare X Foundry
 
-This learning project focused on Flare Time Series Oracle & building with Foundry.
+This is a learning project focused on Flare Time Series Oracle & building with Foundry.
 
 Crowdfunding DAPP on Flare using FTSO (Flare time series oracle) built with Foundry. Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.
 
