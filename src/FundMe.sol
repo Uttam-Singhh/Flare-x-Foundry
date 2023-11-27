@@ -37,9 +37,9 @@ contract FundMe {
         (uint256 _price, uint256 _timestamp, uint256 _decimals) = ftsoRegistry
             .getCurrentPriceWithDecimals(_symbol);
 
-        // if (_timestamp < block.timestamp - 60 * 3 /* 3 mins */) {
-        //     revert("stale price feed");
-        // }
+        if (_timestamp < block.timestamp - 60 * 3 /* 3 mins */) {
+            revert("stale price feed");
+        }
 
         return uint256(((_price * (10 ** (18 - _decimals))) * Amount) / 1e18);
     }
