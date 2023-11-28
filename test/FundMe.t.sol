@@ -29,8 +29,8 @@ contract CounterTest is Test {
     function testMockPrice() public {
         (uint256 price, uint256 timestamp, uint256 decimals) = mockRegistry.getCurrentPriceWithDecimals(symbol);
         assertTrue(price == 1e18);
-        assertEq(decimals, 5);
-        assertEq(timestamp, 0);
+        assertTrue(decimals == 5);
+        assertTrue(timestamp == 0);
     }
 
 
