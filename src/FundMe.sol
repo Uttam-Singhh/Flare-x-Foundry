@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {IFlareContractRegistry} from "flare-foundry-periphery-package/flare/util-contracts/userInterfaces/IFlareContractRegistry.sol";
-import {IFtsoRegistry} from "flare-foundry-periphery-package/flare/ftso/userInterfaces/IFtsoRegistry.sol";
+import {IFlareContractRegistry} from "flare-foundry-periphery-package/coston2/util-contracts/userInterfaces/IFlareContractRegistry.sol";
+import {IFtsoRegistry} from "flare-foundry-periphery-package/coston2/ftso/userInterfaces/IFtsoRegistry.sol";
 
 error FundMe__NotOwner();
 
