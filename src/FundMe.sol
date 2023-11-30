@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
 import {IFlareContractRegistry} from "flare-foundry-periphery-package/coston2/util-contracts/userInterfaces/IFlareContractRegistry.sol";
