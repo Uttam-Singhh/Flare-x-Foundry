@@ -7,11 +7,10 @@ import {IFtsoRegistry} from "flare-foundry-periphery-package/coston2/ftso/userIn
 error FundMe__NotOwner();
 
 contract FundMe {
-    // mappings
-    mapping(address => uint256) private fundedAmount;
+    mapping(address => uint256) private fundedAmount; // mapping
 
-    uint256 public constant MIN_FUND = 5e18;
-    address private immutable i_owner;
+    uint256 public constant MIN_FUND = 1e18; //1 dollar (funded amount > $1)
+    address private immutable i_owner; //owner of the fundme contract who can only withdraw
     address private constant FLARE_CONTRACT_REGISTRY =
         0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019;
 
@@ -19,21 +18,22 @@ contract FundMe {
         i_owner = msg.sender;
     }
 
-    function getTokenPriceWei(
+    //this function helps us to retrieve the current price of FLR & convert the funded amount so it can be compared with MIN_FUND
+    function getPriceinWei(
         string memory _symbol,
         uint256 Amount
     ) public view returns (uint256) {
-        // 2. Access the Contract Registry
+        // access the contract registry
         IFlareContractRegistry contractRegistry = IFlareContractRegistry(
             FLARE_CONTRACT_REGISTRY
         );
 
-        // 3. Retrieve the FTSO Registry
+        // retrieve the FTSO registry
         IFtsoRegistry ftsoRegistry = IFtsoRegistry(
             contractRegistry.getContractAddressByName("FtsoRegistry")
         );
 
-        // 4. Get latest price
+        // get latest price
         (uint256 _price, , uint256 _decimals) = ftsoRegistry
             .getCurrentPriceWithDecimals(_symbol);
 
@@ -41,12 +41,13 @@ contract FundMe {
     }
 
     function fund() public payable {
-        uint256 fund_amount = getTokenPriceWei("testUSDC", msg.value);
+        uint256 fund_amount = getPriceinWei("C2FLR", msg.value);
         require(fund_amount >= MIN_FUND, "didn't send enough money");
 
         fundedAmount[msg.sender] += msg.value;
     }
 
+    //only owner can call the withdraw function
     function withdraw() public onlyOwner {
         require(address(this).balance > 0);
 
@@ -63,10 +64,12 @@ contract FundMe {
         _;
     }
 
+    //retrieve the amount funded by an address
     function getAmountFunded(address funder) external view returns (uint256) {
         return fundedAmount[funder];
     }
 
+    //retrieve the owner of the contract
     function getOwner() external view returns (address) {
         return i_owner;
     }
